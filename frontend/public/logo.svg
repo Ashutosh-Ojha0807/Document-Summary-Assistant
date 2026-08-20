@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" fill="none">
+  <!-- Shield background -->
+  <path d="M100 8 L188 44 L188 120 C188 168 100 212 100 212 C100 212 12 168 12 120 L12 44 Z" fill="#1a1a1a" stroke="#ff5714" stroke-width="3"/>
+  <!-- Shield inner ring -->
+  <path d="M100 18 L178 50 L178 120 C178 163 100 202 100 202 C100 202 22 163 22 120 L22 50 Z" fill="#111111"/>
+
+  <!-- Orange accent flames / feathers at base of neck -->
+  <path d="M68 148 C62 155 55 162 52 170 C64 165 76 158 82 152 Z" fill="#ff5714"/>
+  <path d="M132 148 C138 155 145 162 148 170 C136 165 124 158 118 152 Z" fill="#ff5714"/>
+  <path d="M78 155 C72 164 68 174 66 182 C78 175 88 164 92 156 Z" fill="#e04a10"/>
+  <path d="M122 155 C128 164 132 174 134 182 C122 175 112 164 108 156 Z" fill="#e04a10"/>
+
+  <!-- Neck / body -->
+  <path d="M78 140 C74 148 72 158 74 168 C82 164 100 162 126 168 C128 158 126 148 122 140 Z" fill="#2a2a2a"/>
+  <!-- Neck feather detail -->
+  <path d="M82 144 C80 150 80 156 82 162 C88 158 100 157 118 162 C120 156 120 150 118 144 Z" fill="#222"/>
+
+  <!-- White chest / lower face -->
+  <path d="M76 108 C72 118 72 130 76 140 C84 144 116 144 124 140 C128 130 128 118 124 108 Z" fill="#e8e8e8"/>
+
+  <!-- Dark head/crown -->
+  <path d="M100 32 C80 32 62 44 58 60 C56 68 58 76 62 82 C64 78 68 76 72 76 C72 68 76 62 80 58 C84 56 88 56 92 58 L100 38 L108 58 C112 56 116 56 120 58 C124 62 128 68 128 76 C132 76 136 78 138 82 C142 76 144 68 142 60 C138 44 120 32 100 32 Z" fill="#222222"/>
+
+  <!-- Crown feathers (top) -->
+  <path d="M100 32 L96 22 L100 26 L104 22 Z" fill="#ff5714"/>
+  <path d="M92 34 L86 24 L91 29 L94 24 Z" fill="#ff5714"/>
+  <path d="M108 34 L114 24 L109 29 L106 24 Z" fill="#ff5714"/>
+  <path d="M84 38 L76 30 L82 36 Z" fill="#cc4510"/>
+  <path d="M116 38 L124 30 L118 36 Z" fill="#cc4510"/>
+
+  <!-- Head sides (dark feathers) -->
+  <path d="M62 60 C56 62 50 68 48 76 C52 74 56 70 60 68 Z" fill="#333"/>
+  <path d="M138 60 C144 62 150 68 152 76 C148 74 144 70 140 68 Z" fill="#333"/>
+
+  <!-- White face mask -->
+  <path d="M100 50 C88 50 78 58 76 68 C76 80 84 90 100 92 C116 90 124 80 124 68 C122 58 112 50 100 50 Z" fill="#f0f0f0"/>
+
+  <!-- Eyes -->
+  <!-- Left eye socket -->
+  <ellipse cx="87" cy="70" rx="9" ry="8" fill="#1a1a1a"/>
+  <!-- Left eye -->
+  <ellipse cx="87" cy="70" rx="6" ry="6" fill="#ff8c00"/>
+  <ellipse cx="87" cy="70" rx="3.5" ry="3.5" fill="#111"/>
+  <ellipse cx="85.5" cy="68.5" rx="1.2" ry="1.2" fill="#fff" opacity="0.9"/>
+  <!-- Left eye ridge -->
+  <path d="M80 63 C83 60 91 60 94 63" stroke="#333" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+
+  <!-- Right eye socket -->
+  <ellipse cx="113" cy="70" rx="9" ry="8" fill="#1a1a1a"/>
+  <!-- Right eye -->
+  <ellipse cx="113" cy="70" rx="6" ry="6" fill="#ff8c00"/>
+  <ellipse cx="113" cy="70" rx="3.5" ry="3.5" fill="#111"/>
+  <ellipse cx="111.5" cy="68.5" rx="1.2" ry="1.2" fill="#fff" opacity="0.9"/>
+  <!-- Right eye ridge -->
+  <path d="M106 63 C109 60 117 60 120 63" stroke="#333" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+
+  <!-- Beak — upper (orange) -->
+  <path d="M100 78 C94 78 88 82 86 88 C88 92 92 96 100 100 C108 96 112 92 114 88 C112 82 106 78 100 78 Z" fill="#ff5714"/>
+  <!-- Beak upper highlight -->
+  <path d="M100 80 C95 80 90 83 89 88 C91 91 95 94 100 97" fill="#ff7a3d" opacity="0.5"/>
+  <!-- Beak lower (darker) -->
+  <path d="M89 90 C91 96 95 102 100 104 C105 102 109 96 111 90 Z" fill="#cc4510"/>
+  <!-- Beak center line -->
+  <path d="M100 88 L100 104" stroke="#a03a0e" stroke-width="1" opacity="0.6"/>
+  <!-- Nostril -->
+  <ellipse cx="95" cy="84" rx="2" ry="1.2" fill="#cc4510" opacity="0.7"/>
+
+  <!-- Shield bottom tip orange accent -->
+  <path d="M88 198 C92 208 100 212 100 212 C100 212 108 208 112 198 C108 200 100 202 92 200 Z" fill="#ff5714" opacity="0.6"/>
+</svg>
