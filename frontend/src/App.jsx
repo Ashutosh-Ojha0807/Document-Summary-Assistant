@@ -9,6 +9,10 @@ import confetti from 'canvas-confetti';
 import jsPDF from 'jspdf';
 import eagleLogo from './assets/logo.svg';
 
+// In production (built frontend) use the deployed backend URL.
+// In dev the Vite proxy forwards /api → backend, so base stays empty.
+const API_BASE = import.meta.env.VITE_API_BASE || '';
+
 export default function App() {
   // Theme state
   const [theme, setTheme] = useState('dark');
@@ -55,7 +59,7 @@ export default function App() {
 
   // Load samples
   useEffect(() => {
-    fetch('/api/samples')
+    fetch(`${API_BASE}/api/samples`)
       .then(res => res.json())
       .then(data => setSamples(data))
       .catch(() => {});
@@ -101,7 +105,7 @@ export default function App() {
       formData.append('file', file);
 
       // 1. Text Extraction
-      const extractRes = await fetch('/api/extract', {
+      const extractRes = await fetch(`${API_BASE}/api/extract`, {
         method: 'POST',
         body: formData
       });
@@ -182,7 +186,7 @@ export default function App() {
   // Request summary from backend
   const generateDocumentSummary = async (text, length, style) => {
     try {
-      const res = await fetch('/api/summarize', {
+      const res = await fetch(`${API_BASE}/api/summarize`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -352,7 +356,7 @@ ${summaryData.improvement_suggestions.map(s => `### [${s.impact.toUpperCase()}] 
     setIsAnswering(true);
 
     try {
-      const res = await fetch('/api/qa', {
+      const res = await fetch(`${API_BASE}/api/qa`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -34,12 +34,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/health")
+def health_simple():
+    """Bare /health route for Render cron jobs and uptime monitors."""
+    return {"status": "ok"}
+
 @app.get("/api/health")
 def health_check():
     has_gemini = bool(os.environ.get("GEMINI_API_KEY"))
     return {
         "status": "healthy",
-        "service": "Document Summary Assistant Backend",
+        "service": "TalonAI Document Summary Assistant",
         "ocr_available": HAS_TESSERACT,
         "gemini_api_configured": has_gemini,
         "supported_formats": ["PDF (.pdf)", "Images (.png, .jpg, .jpeg, .webp, .bmp)", "Word (.docx)", "Spreadsheets (.xlsx, .csv)", "Plain Text (.txt, .md, .rtf)"]

@@ -178,10 +178,11 @@ def generate_improvement_suggestions(text: str, readability: ReadabilityScore) -
     filler_words = ['very', 'really', 'in order to', 'basically', 'actually', 'as a matter of fact', 'utilize']
     found_fillers = [fw for fw in filler_words if re.search(r'\b' + re.escape(fw) + r'\b', text, re.I)]
     if found_fillers:
+        filler_list = ", ".join('"' + f + '"' for f in found_fillers[:3])
         suggestions.append(ImprovementSuggestion(
             category="Conciseness",
             type="conciseness",
-            suggestion=f"Remove unnecessary filler phrases such as {', '.join(f'\"{f}\"' for f in found_fillers[:3])} to tighten prose and sharpen the core message.",
+            suggestion=f"Remove unnecessary filler phrases such as {filler_list} to tighten prose and sharpen the core message.",
             impact="medium",
             example="Use 'to' instead of 'in order to'; use 'use' instead of 'utilize'."
         ))
