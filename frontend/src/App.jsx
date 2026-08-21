@@ -271,10 +271,10 @@ export default function App() {
       case 'sample-documents': return <SampleDocuments onLoadSample={handleLoadSample} isLoading={isLoading} />;
       case 'summary-workspace': return <SummaryWorkspace doc={docForPage} onNavigate={navigate} onRegenerateSummary={handleRegenerateSummary} />;
       case 'key-insights': return <KeyInsights doc={docForPage} onNavigate={navigate} />;
-      case 'improvement-suggestions': return <ImprovementSuggestions doc={docForPage} onNavigate={navigate} />;
+      case 'improvement-suggestions': return <ImprovementSuggestions doc={docForPage} onNavigate={navigate} onRegenerateSummary={handleRegenerateSummary} apiKey={apiKey} />;
       case 'readability': return <ReadabilityAnalysis doc={docForPage} onNavigate={navigate} />;
       case 'extracted-text': return <ExtractedText doc={docForPage} onNavigate={navigate} />;
-      case 'qa-chat': return <QAChat doc={docForPage} onNavigate={navigate} apiKey={apiKey} />;
+      case 'qa-chat': return <QAChat doc={docForPage} onNavigate={navigate} apiKey={apiKey} docs={docs} />;
       case 'settings': return <Settings apiKey={apiKey} onSaveApiKey={handleSaveApiKey} />;
       case 'help': return (
         <div className="page-content">
