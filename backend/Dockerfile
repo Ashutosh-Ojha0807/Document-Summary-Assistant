@@ -37,7 +37,9 @@ RUN useradd -m -u 1000 appuser && chown -R appuser /app
 USER appuser
 
 # ── Runtime ──────────────────────────────────────────────────
-# PORT is injected by Render/HF Spaces automatically
+# PORT is injected by Render/HF Spaces (7860 for HF, 10000 for Render)
+# Local Docker: runs on 8000 by default
 EXPOSE 7860
+EXPOSE 8000
 
 CMD ["python", "main.py"]

@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  // In dev: proxy /api to local backend (or deployed backend if VITE_API_BASE is set)
+  // Dev proxy: empty VITE_API_BASE → fall back to local backend on 8000
   const backendTarget = env.VITE_API_BASE || 'http://127.0.0.1:8000'
 
   return {

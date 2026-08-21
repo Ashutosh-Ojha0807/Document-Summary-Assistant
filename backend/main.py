@@ -152,6 +152,6 @@ if __name__ == "__main__":
     # Cloud hosts inject PORT env var:
     #   Render   → usually 10000
     #   HF Spaces → 7860
-    # Falls back to 7860 locally when running via Docker
-    port = int(os.environ.get("PORT", 7860))
+    # Falls back to 8000 for local development
+    port = int(os.environ.get("PORT", 8000))
     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
