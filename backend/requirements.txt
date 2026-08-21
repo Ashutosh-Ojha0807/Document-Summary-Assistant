@@ -32,7 +32,7 @@ torch==2.6.0
 # ── OCR: LLMWhisperer (layout-preserving PDF extraction) ──────
 # Cloud API — requires LLMWHISPERER_API_KEY env var.
 # Free tier: 100 pages/month. https://unstract.com/llmwhisperer/
-llmwhisperer-client==2.8.1
+llmwhisperer-client>=2.3.0
 
 # ── AI / ML ───────────────────────────────────────────────────
 google-genai==1.2.0
