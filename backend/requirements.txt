@@ -10,9 +10,29 @@ python-docx==1.1.2
 openpyxl==3.1.5
 pandas==2.2.3
 
-# ── OCR & Image Processing ────────────────────────────────────
+# ── Image Processing (base — always required) ─────────────────
 pillow==11.1.0
+
+# ── OCR: Tesseract (fallback — system binary required) ────────
+# Install binary from: https://github.com/UB-Mannheim/tesseract/wiki
+# Code auto-detects the binary path — no TESSERACT_CMD env var needed.
 pytesseract==0.3.13
+
+# ── OCR: PP-OCRv6 tiny via Transformers backend ───────────────
+# Tiny model: 1.5M params total, ~150MB RAM peak — safe on Render Starter
+# Does NOT require paddlepaddle runtime.
+# To enable multilingual OCR change _PADDLEOCR_LANG in extractor.py.
+paddleocr==3.7.0
+transformers==4.52.4
+# torch CPU — required by the Transformers backend for PP-OCRv6
+# Pin to CPU-only build to keep Docker image lean.
+# GPU builds: https://pytorch.org/get-started/locally/
+torch==2.6.0
+
+# ── OCR: LLMWhisperer (layout-preserving PDF extraction) ──────
+# Cloud API — requires LLMWHISPERER_API_KEY env var.
+# Free tier: 100 pages/month. https://unstract.com/llmwhisperer/
+llmwhisperer-client==2.8.1
 
 # ── AI / ML ───────────────────────────────────────────────────
 google-genai==1.2.0

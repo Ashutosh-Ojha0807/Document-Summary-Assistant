@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Download, Share2, RefreshCw, Sparkles, CheckCircle2, Hash, MessageSquare, FileText, TrendingUp, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Download, Share2, RefreshCw, Sparkles, CheckCircle2, Hash, MessageSquare, FileText, TrendingUp, ChevronRight, ChevronDown, ChevronUp, Copy, Check } from 'lucide-react';
 import jsPDF from 'jspdf';
 
 const API_BASE = import.meta.env.VITE_API_BASE || '';
@@ -10,6 +10,9 @@ export default function SummaryWorkspace({ doc, onNavigate, onRegenerateSummary 
   const [summaryStyle, setSummaryStyle] = useState(doc?.summary?.summary_style || 'executive');
   const [regenerating, setRegenerating] = useState(false);
   const [customInstructions, setCustomInstructions] = useState('');
+  const [rawTextOpen, setRawTextOpen] = useState(false);
+  const [rawTextCopied, setRawTextCopied] = useState(false);
+  const [rawSearchQuery, setRawSearchQuery] = useState('');
 
   if (!doc) {
     return (
@@ -57,6 +60,26 @@ export default function SummaryWorkspace({ doc, onNavigate, onRegenerateSummary 
 
   const sections = doc.extracted?.sections || [];
   const keyInsights = summary?.key_takeaways?.slice(0, 4) || [];
+  const rawText = doc.extracted?.raw_text || '';
+  const extractionMethod = doc.extracted?.metadata?.extraction_method || '–';
+  const wordCount = doc.extracted?.metadata?.word_count || 0;
+  const charCount = doc.extracted?.metadata?.char_count || 0;
+
+  function handleCopyRaw() {
+    navigator.clipboard.writeText(rawText);
+    setRawTextCopied(true);
+    setTimeout(() => setRawTextCopied(false), 2000);
+  }
+
+  function highlightSearch(text, query) {
+    if (!query.trim()) return text;
+    const parts = text.split(new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'));
+    return parts.map((part, i) =>
+      part.toLowerCase() === query.toLowerCase()
+        ? <mark key={i} style={{ background: '#fbbf24', color: '#1a1a1a', borderRadius: 2, padding: '0 1px' }}>{part}</mark>
+        : part
+    );
+  }
 
   const tabs = [
     { id: 'summary', label: 'Summary', icon: <Sparkles size={14} /> },
@@ -200,6 +223,109 @@ export default function SummaryWorkspace({ doc, onNavigate, onRegenerateSummary 
                           </div>
                         </div>
                       ))}
+                    </div>
+                  )}
+
+                  {/* ── Raw OCR / Extracted Text panel ── */}
+                  {rawText && (
+                    <div className="card" style={{ marginBottom: 8, overflow: 'hidden' }}>
+                      {/* Collapsible header */}
+                      <button
+                        onClick={() => setRawTextOpen(o => !o)}
+                        style={{
+                          width: '100%', padding: '13px 16px',
+                          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                          background: 'none', border: 'none', cursor: 'pointer',
+                          borderBottom: rawTextOpen ? '1px solid var(--border)' : 'none',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <FileText size={15} style={{ color: 'var(--orange)' }} />
+                          <span style={{ fontWeight: 700, fontSize: '0.88rem', color: 'var(--text-1)' }}>
+                            Original Extracted Text
+                          </span>
+                          <span style={{ fontSize: '0.7rem', background: 'var(--orange-dim)', color: 'var(--orange)', padding: '2px 8px', borderRadius: 10, fontWeight: 600 }}>
+                            {extractionMethod}
+                          </span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <span style={{ fontSize: '0.72rem', color: 'var(--text-3)' }}>
+                            {wordCount.toLocaleString()} words · {charCount.toLocaleString()} chars
+                          </span>
+                          {rawTextOpen
+                            ? <ChevronUp size={15} style={{ color: 'var(--text-3)' }} />
+                            : <ChevronDown size={15} style={{ color: 'var(--text-3)' }} />}
+                        </div>
+                      </button>
+
+                      {rawTextOpen && (
+                        <>
+                          {/* Search + Copy toolbar */}
+                          <div style={{ padding: '10px 14px', borderBottom: '1px solid var(--border)', display: 'flex', gap: 8 }}>
+                            <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 7, background: 'var(--bg-input)', border: '1px solid var(--border-md)', borderRadius: 'var(--r-md)', padding: '0 10px', height: 32 }}>
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                              <input
+                                value={rawSearchQuery}
+                                onChange={e => setRawSearchQuery(e.target.value)}
+                                placeholder="Search in extracted text…"
+                                style={{ background: 'none', border: 'none', color: 'var(--text-1)', fontSize: '0.82rem', flex: 1, outline: 'none' }}
+                              />
+                            </div>
+                            <button
+                              className="btn btn-secondary btn-sm"
+                              onClick={handleCopyRaw}
+                              style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0 }}
+                            >
+                              {rawTextCopied ? <Check size={13} style={{ color: 'var(--green)' }} /> : <Copy size={13} />}
+                              {rawTextCopied ? 'Copied!' : 'Copy All'}
+                            </button>
+                            <button
+                              className="btn btn-secondary btn-sm"
+                              onClick={() => onNavigate('extracted-text', doc)}
+                              style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0 }}
+                            >
+                              <FileText size={13} /> Full View
+                            </button>
+                          </div>
+
+                          {/* Line-numbered text */}
+                          <div style={{ maxHeight: 340, overflowY: 'auto', background: 'var(--bg-input)' }}>
+                            {rawText.split('\n').map((line, idx) => (
+                              <div key={idx} style={{ display: 'flex' }}>
+                                <span style={{
+                                  width: 38, flexShrink: 0, textAlign: 'right',
+                                  paddingRight: 12, color: 'var(--text-4)',
+                                  fontSize: '0.7rem', userSelect: 'none',
+                                  lineHeight: '1.8em',
+                                  borderRight: '1px solid var(--border)',
+                                  background: 'var(--bg-card)',
+                                }}>
+                                  {idx + 1}
+                                </span>
+                                <span style={{
+                                  flex: 1, paddingLeft: 12, paddingRight: 16,
+                                  fontFamily: 'var(--font-mono)', fontSize: '0.8rem',
+                                  lineHeight: '1.8em', color: 'var(--text-1)',
+                                  whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+                                }}>
+                                  {highlightSearch(line, rawSearchQuery)}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Footer */}
+                          <div style={{ padding: '8px 14px', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-3)' }}>
+                            <span>{rawText.split('\n').length} lines · {wordCount.toLocaleString()} words · {charCount.toLocaleString()} chars</span>
+                            <button
+                              onClick={() => onNavigate('extracted-text', doc)}
+                              style={{ background: 'none', border: 'none', color: 'var(--orange)', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 600 }}
+                            >
+                              Open in full viewer →
+                            </button>
+                          </div>
+                        </>
+                      )}
                     </div>
                   )}
                 </>

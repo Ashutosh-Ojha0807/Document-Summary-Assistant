@@ -11,7 +11,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 load_dotenv()
 
 from models import ExtractedDocument, SummarizeRequest, SummaryResponse, QARequest, QAResponse
-from services.extractor import extract_document, HAS_TESSERACT
+from services.extractor import extract_document, HAS_TESSERACT, HAS_PADDLEOCR, HAS_LLMWHISPERER
 from services.summarizer import generate_summary
 from services.qa import answer_document_question
 
@@ -45,9 +45,28 @@ def health_check():
     return {
         "status": "healthy",
         "service": "TalonAI Document Summary Assistant",
-        "ocr_available": HAS_TESSERACT,
-        "gemini_api_configured": has_gemini,
-        "supported_formats": ["PDF (.pdf)", "Images (.png, .jpg, .jpeg, .webp, .bmp)", "Word (.docx)", "Spreadsheets (.xlsx, .csv)", "Plain Text (.txt, .md, .rtf)"]
+        # ── OCR engines ──────────────────────────────────────────────
+        "ocr_available":          HAS_TESSERACT or HAS_PADDLEOCR,
+        "tesseract_available":    HAS_TESSERACT,
+        "paddleocr_available":    HAS_PADDLEOCR,   # PP-OCRv6 tiny
+        "llmwhisperer_available": HAS_LLMWHISPERER, # layout-preserving PDF
+        # ── AI engine ────────────────────────────────────────────────
+        "gemini_api_configured":  has_gemini,
+        # ── Active extraction methods per type ────────────────────────
+        "extraction_engines": {
+            "images": "LLMWhisperer OCR" if HAS_LLMWHISPERER else ("PP-OCRv6 tiny" if HAS_PADDLEOCR else ("Tesseract" if HAS_TESSERACT else "None")),
+            "pdfs":   "LLMWhisperer" if HAS_LLMWHISPERER else "pdfplumber/PyPDF",
+            "docx":   "python-docx",
+            "xlsx":   "Pandas & OpenPyXL",
+            "text":   "Native UTF-8",
+        },
+        "supported_formats": [
+            "PDF (.pdf)",
+            "Images (.png, .jpg, .jpeg, .webp, .bmp, .tiff)",
+            "Word (.docx)",
+            "Spreadsheets (.xlsx, .csv)",
+            "Plain Text (.txt, .md, .rtf)",
+        ],
     }
 
 @app.post("/api/extract", response_model=ExtractedDocument)
