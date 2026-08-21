@@ -22,9 +22,13 @@ app = FastAPI(
 )
 
 # Enable CORS for frontend Vite dev server (usually port 5173 / localhost)
+# CORS — allow all origins in dev; scope to frontend URL in prod via ALLOWED_ORIGINS env var
+_raw_origins = os.environ.get("ALLOWED_ORIGINS", "*")
+_allow_origins = [o.strip() for o in _raw_origins.split(",")] if _raw_origins != "*" else ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_allow_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -140,4 +144,9 @@ VX-482 demonstrates robust anti-tumor activity and a manageable toxicity profile
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    # Cloud hosts inject PORT env var:
+    #   Render   → usually 10000
+    #   HF Spaces → 7860
+    # Falls back to 7860 locally when running via Docker
+    port = int(os.environ.get("PORT", 7860))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)

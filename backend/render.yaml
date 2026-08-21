@@ -1,0 +1,28 @@
+# ============================================================
+#  Render.com — Service Configuration
+#  Docs: https://render.com/docs/blueprint-spec
+# ============================================================
+
+services:
+  - type: web
+    name: talonai-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    # Render injects PORT automatically — no need to set it here
+
+    # ── Environment Variables ─────────────────────────────────
+    # Set these in the Render dashboard under Environment:
+    #   GEMINI_API_KEY   → your Google Gemini API key (optional)
+    #   ALLOWED_ORIGINS  → your frontend URL e.g. https://your-app.vercel.app
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false          # fill in Render dashboard — never commit the value
+      - key: ALLOWED_ORIGINS
+        value: "*"           # change to your frontend URL after deploying frontend
+
+    # ── Health Check ─────────────────────────────────────────
+    healthCheckPath: /api/health
+
+    # ── Plan ─────────────────────────────────────────────────
+    plan: free               # upgrade to starter ($7/mo) to avoid sleep
