@@ -1,4 +1,5 @@
 # DocuPulse AI — Document Summary Assistant
+(https://document-summary-assistant-hazel.vercel.app/)
 
 An intelligent, multi-format document analysis application that extracts text from PDFs and images, generates smart summaries with configurable length and style, highlights key points and action items, scores document readability, and provides an interactive Q&A chat — all with a built-in offline fallback engine that requires zero API keys.
 
