@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   LayoutDashboard, UploadCloud, Files, BookOpen, Lightbulb,
   TrendingUp, Eye, FileText, MessageSquare, Settings as SettingsIcon,
-  HelpCircle, Search, Sun, Moon, Bell, ChevronDown, Cpu, Star
+  HelpCircle, Search, Sun, Moon, ChevronDown, Cpu, Star
 } from 'lucide-react';
 import eagleLogo from './assets/logo.svg';
 
@@ -17,6 +17,7 @@ import ReadabilityAnalysis from './pages/ReadabilityAnalysis.jsx';
 import ExtractedText from './pages/ExtractedText.jsx';
 import SampleDocuments from './pages/SampleDocuments.jsx';
 import Settings from './pages/Settings.jsx';
+import DarkVeil from './components/DarkVeil.jsx';
 
 const API_BASE = import.meta.env.VITE_API_BASE || '';
 
@@ -64,11 +65,12 @@ export default function App() {
   const [loadingStep, setLoadingStep] = useState('');
   const [apiKey, setApiKey] = useState(() => localStorage.getItem('talonai_gemini_key') || '');
   const [searchQuery, setSearchQuery] = useState('');
-  const [notifications] = useState(2);
   const [geminiOnline, setGeminiOnline] = useState(false);
 
   useEffect(() => {
-    document.body.style.background = theme === 'dark' ? '#0d0d0d' : '#f4f4f4';
+    document.documentElement.setAttribute('data-theme', theme);
+    document.body.style.background = 'var(--bg-app)';
+    document.body.style.color = 'var(--text-1)';
   }, [theme]);
 
   // Check backend health on mount
@@ -289,9 +291,35 @@ export default function App() {
   }
 
   return (
-    <div className="app-shell" style={{ background: theme === 'dark' ? 'var(--bg-app)' : '#f4f4f4', color: theme === 'dark' ? 'var(--text-1)' : '#111' }}>
+    <div className="app-shell" style={{ position: 'relative', background: 'var(--bg-app)', color: 'var(--text-1)' }}>
+      {/* ── Background Theme Layer (DarkVeil) ── */}
+      <div
+        className="darkveil-bg-layer"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: 0,
+          pointerEvents: 'none',
+          opacity: theme === 'dark' ? 0.65 : 0.2,
+          overflow: 'hidden'
+        }}
+      >
+        <DarkVeil
+          hueShift={15}
+          noiseIntensity={0.03}
+          scanlineIntensity={0.12}
+          speed={0.4}
+          scanlineFrequency={0.04}
+          warpAmount={0.2}
+          resolutionScale={0.75}
+        />
+      </div>
+
       {/* ── Sidebar ── */}
-      <aside className="sidebar">
+      <aside className="sidebar" style={{ zIndex: 100 }}>
         {/* Logo */}
         <div className="sidebar-logo">
           <img src={eagleLogo} alt="TalonAI" style={{ width: 36, height: 36, objectFit: 'contain', filter: 'drop-shadow(0 0 6px rgba(255,107,34,0.4))' }} />
@@ -348,7 +376,7 @@ export default function App() {
       </aside>
 
       {/* ── Main ── */}
-      <div className="main-wrap">
+      <div className="main-wrap" style={{ position: 'relative', zIndex: 1 }}>
         {/* Topbar */}
         <header className="topbar">
           <div className="topbar-search">
@@ -365,18 +393,6 @@ export default function App() {
             <button className="topbar-icon-btn" onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} title="Toggle theme">
               {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             </button>
-            <button className="topbar-icon-btn" title="Notifications">
-              <Bell size={16} />
-              {notifications > 0 && <span className="notif-badge">{notifications}</span>}
-            </button>
-            <div className="topbar-user" onClick={() => setPage('settings')}>
-              <div className="topbar-avatar">AO</div>
-              <div>
-                <div className="topbar-user-name">Ashutosh Ojha</div>
-                <div className="topbar-user-role">Free tier</div>
-              </div>
-              <ChevronDown size={14} style={{ color: 'var(--text-3)' }} />
-            </div>
           </div>
         </header>
 

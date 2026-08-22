@@ -49,10 +49,10 @@ export default function UploadDocument({ onUploadFile, isLoading, loadingStep })
               onChange={e => e.target.files?.[0] && onUploadFile(e.target.files[0])} />
 
             {isLoading ? (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
-                <div className="spinner" />
-                <div style={{ fontWeight: 600 }}>Processing Document…</div>
-                <div style={{ color: 'var(--text-3)', fontSize: '0.82rem' }}>{loadingStep}</div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, padding: '24px 0' }}>
+                <div className="spinner" style={{ width: 44, height: 44 }} />
+                <div style={{ fontWeight: 600, fontSize: '1rem' }}>Processing Document…</div>
+                <div style={{ color: 'var(--text-3)', fontSize: '0.82rem' }}>{loadingStep || 'Extracting text, analyzing content & generating summary…'}</div>
               </div>
             ) : (
               <>

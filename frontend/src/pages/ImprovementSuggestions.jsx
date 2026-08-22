@@ -178,7 +178,7 @@ export default function ImprovementSuggestions({ doc, onNavigate, onRegenerateSu
                     {isOpen && s.example && (
                       <div style={{ padding: '10px 16px 14px 64px', borderTop: '1px solid var(--border)', background: 'var(--bg-elevated)' }}>
                         <div style={{ fontSize: '0.76rem', fontWeight: 600, color: 'var(--text-3)', marginBottom: 6 }}>Example:</div>
-                        <div style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', background: 'rgba(0,0,0,0.3)', padding: '8px 12px', borderRadius: 6, borderLeft: '2px solid var(--orange)', color: 'var(--text-2)' }}>{s.example}</div>
+                        <div style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', background: 'var(--bg-input)', padding: '8px 12px', borderRadius: 6, borderLeft: '2px solid var(--orange)', color: 'var(--text-2)' }}>{s.example}</div>
                       </div>
                     )}
                   </div>

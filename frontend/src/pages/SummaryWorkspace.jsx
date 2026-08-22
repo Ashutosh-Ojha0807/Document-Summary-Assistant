@@ -174,7 +174,17 @@ export default function SummaryWorkspace({ doc, onNavigate, onRegenerateSummary 
                 </button>
               </div>
 
-              {!summary ? (
+              {doc.status === 'processing' || regenerating ? (
+                <div className="card" style={{ padding: 48, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+                  <div className="spinner" style={{ width: 44, height: 44 }} />
+                  <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-1)' }}>
+                    {regenerating ? "Regenerating summary…" : "Extracting text & generating smart AI summary…"}
+                  </div>
+                  <div style={{ fontSize: '0.82rem', color: 'var(--text-3)' }}>
+                    Please wait while our AI engine processes your document.
+                  </div>
+                </div>
+              ) : !summary ? (
                 <div className="card" style={{ padding: 40, textAlign: 'center', color: 'var(--text-3)' }}>
                   <Sparkles size={32} style={{ margin: '0 auto 12px', opacity: 0.3 }} />
                   <p>No summary yet. Click "Regenerate Summary" to generate one.</p>
@@ -334,69 +344,91 @@ export default function SummaryWorkspace({ doc, onNavigate, onRegenerateSummary 
           )}
 
           {/* Tab: Key Points */}
-          {activeTab === 'keypoints' && summary && (
-            <div>
-              <div className="card" style={{ padding: '16px 18px', marginBottom: 14 }}>
-                <div style={{ fontWeight: 700, marginBottom: 12 }}>Key Takeaways</div>
-                {(summary.key_takeaways || []).map((t, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 0', borderBottom: i < summary.key_takeaways.length - 1 ? '1px solid var(--border)' : 'none' }}>
-                    <div style={{ width: 24, height: 24, borderRadius: 6, background: 'var(--orange-dim)', color: 'var(--orange)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.7rem', flexShrink: 0 }}>0{i + 1}</div>
-                    <span style={{ fontSize: '0.86rem', lineHeight: 1.6 }}>{t}</span>
-                  </div>
-                ))}
+          {activeTab === 'keypoints' && (
+            doc.status === 'processing' || regenerating ? (
+              <div className="card" style={{ padding: 48, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+                <div className="spinner" style={{ width: 44, height: 44 }} />
+                <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-1)' }}>Extracting Key Points…</div>
               </div>
-              <div className="card" style={{ padding: '16px 18px' }}>
-                <div style={{ fontWeight: 700, marginBottom: 12 }}>Action Items</div>
-                {(summary.action_items || []).map((a, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '9px 0', borderBottom: i < summary.action_items.length - 1 ? '1px solid var(--border)' : 'none' }}>
-                    <CheckCircle2 size={16} style={{ color: 'var(--green)', flexShrink: 0, marginTop: 2 }} />
-                    <span style={{ fontSize: '0.85rem', lineHeight: 1.6 }}>{a}</span>
-                  </div>
-                ))}
+            ) : summary ? (
+              <div>
+                <div className="card" style={{ padding: '16px 18px', marginBottom: 14 }}>
+                  <div style={{ fontWeight: 700, marginBottom: 12 }}>Key Takeaways</div>
+                  {(summary.key_takeaways || []).map((t, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 0', borderBottom: i < summary.key_takeaways.length - 1 ? '1px solid var(--border)' : 'none' }}>
+                      <div style={{ width: 24, height: 24, borderRadius: 6, background: 'var(--orange-dim)', color: 'var(--orange)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.7rem', flexShrink: 0 }}>0{i + 1}</div>
+                      <span style={{ fontSize: '0.86rem', lineHeight: 1.6 }}>{t}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="card" style={{ padding: '16px 18px' }}>
+                  <div style={{ fontWeight: 700, marginBottom: 12 }}>Action Items</div>
+                  {(summary.action_items || []).map((a, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '9px 0', borderBottom: i < summary.action_items.length - 1 ? '1px solid var(--border)' : 'none' }}>
+                      <CheckCircle2 size={16} style={{ color: 'var(--green)', flexShrink: 0, marginTop: 2 }} />
+                      <span style={{ fontSize: '0.85rem', lineHeight: 1.6 }}>{a}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="card" style={{ padding: 40, textAlign: 'center', color: 'var(--text-3)' }}>
+                <p>No key points available yet.</p>
+              </div>
+            )
           )}
 
           {/* Tab: Insights */}
-          {activeTab === 'insights' && summary && (
-            <div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12, marginBottom: 14 }}>
-                <div className="card" style={{ padding: 16, textAlign: 'center' }}>
-                  <div style={{ fontSize: '1.8rem', fontWeight: 800, background: 'var(--grad-orange)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                    {summary.readability?.flesch_reading_ease || 0}
-                  </div>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 600, marginTop: 4 }}>Reading Ease</div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-3)' }}>0–100 scale</div>
-                </div>
-                <div className="card" style={{ padding: 16, textAlign: 'center' }}>
-                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--blue)' }}>
-                    Grade {summary.readability?.flesch_kincaid_grade || '–'}
-                  </div>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 600, marginTop: 4 }}>Grade Level</div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-3)' }}>{summary.readability?.readability_level?.split('(')[0]}</div>
-                </div>
-                <div className="card" style={{ padding: 16, textAlign: 'center' }}>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--amber)', marginTop: 8 }}>
-                    {summary.readability?.reading_tone || '–'}
-                  </div>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 600, marginTop: 4 }}>Detected Tone</div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-3)' }}>Avg {summary.readability?.avg_words_per_sentence} w/s</div>
-                </div>
+          {activeTab === 'insights' && (
+            doc.status === 'processing' || regenerating ? (
+              <div className="card" style={{ padding: 48, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+                <div className="spinner" style={{ width: 44, height: 44 }} />
+                <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-1)' }}>Generating Content Insights…</div>
               </div>
-              <div className="card" style={{ padding: '16px 18px' }}>
-                <div style={{ fontWeight: 700, marginBottom: 12 }}>Improvement Suggestions</div>
-                {(summary.improvement_suggestions || []).map((s, i) => (
-                  <div key={i} style={{ padding: '12px 0', borderBottom: i < summary.improvement_suggestions.length - 1 ? '1px solid var(--border)' : 'none' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                      <span style={{ fontWeight: 600, fontSize: '0.83rem' }}>{s.category}</span>
-                      <span className={`badge ${s.impact === 'high' ? 'badge-amber' : 'badge-orange'}`}>{s.impact?.toUpperCase()} IMPACT</span>
+            ) : summary ? (
+              <div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12, marginBottom: 14 }}>
+                  <div className="card" style={{ padding: 16, textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.8rem', fontWeight: 800, background: 'var(--grad-orange)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                      {summary.readability?.flesch_reading_ease || 0}
                     </div>
-                    <p style={{ fontSize: '0.83rem', color: 'var(--text-2)', lineHeight: 1.6, marginBottom: s.example ? 6 : 0 }}>{s.suggestion}</p>
-                    {s.example && <div style={{ fontSize: '0.76rem', background: 'rgba(0,0,0,0.3)', padding: '6px 10px', borderRadius: 6, borderLeft: '2px solid var(--orange)', fontFamily: 'var(--font-mono)', color: 'var(--text-2)' }}>{s.example}</div>}
+                    <div style={{ fontSize: '0.78rem', fontWeight: 600, marginTop: 4 }}>Reading Ease</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-3)' }}>0–100 scale</div>
                   </div>
-                ))}
+                  <div className="card" style={{ padding: 16, textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--blue)' }}>
+                      Grade {summary.readability?.flesch_kincaid_grade || '–'}
+                    </div>
+                    <div style={{ fontSize: '0.78rem', fontWeight: 600, marginTop: 4 }}>Grade Level</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-3)' }}>{summary.readability?.readability_level?.split('(')[0]}</div>
+                  </div>
+                  <div className="card" style={{ padding: 16, textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--amber)', marginTop: 8 }}>
+                      {summary.readability?.reading_tone || '–'}
+                    </div>
+                    <div style={{ fontSize: '0.78rem', fontWeight: 600, marginTop: 4 }}>Detected Tone</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-3)' }}>Avg {summary.readability?.avg_words_per_sentence} w/s</div>
+                  </div>
+                </div>
+                <div className="card" style={{ padding: '16px 18px' }}>
+                  <div style={{ fontWeight: 700, marginBottom: 12 }}>Improvement Suggestions</div>
+                  {(summary.improvement_suggestions || []).map((s, i) => (
+                    <div key={i} style={{ padding: '12px 0', borderBottom: i < summary.improvement_suggestions.length - 1 ? '1px solid var(--border)' : 'none' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                        <span style={{ fontWeight: 600, fontSize: '0.83rem' }}>{s.category}</span>
+                        <span className={`badge ${s.impact === 'high' ? 'badge-amber' : 'badge-orange'}`}>{s.impact?.toUpperCase()} IMPACT</span>
+                      </div>
+                      <p style={{ fontSize: '0.83rem', color: 'var(--text-2)', lineHeight: 1.6, marginBottom: s.example ? 6 : 0 }}>{s.suggestion}</p>
+                      {s.example && <div style={{ fontSize: '0.76rem', background: 'var(--bg-input)', padding: '6px 10px', borderRadius: 6, borderLeft: '2px solid var(--orange)', fontFamily: 'var(--font-mono)', color: 'var(--text-2)' }}>{s.example}</div>}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="card" style={{ padding: 40, textAlign: 'center', color: 'var(--text-3)' }}>
+                <p>No insights available yet.</p>
+              </div>
+            )
           )}
 
           {/* Tab: Q&A */}

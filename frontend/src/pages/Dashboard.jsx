@@ -9,8 +9,8 @@ const API_BASE = import.meta.env.VITE_API_BASE || '';
 
 function FileIcon({ type }) {
   const t = (type || '').toLowerCase();
-  const cls = ['pdf','docx','xlsx','png','txt','csv'].find(x => t.includes(x)) || 'txt';
-  const labels = { pdf:'PDF', docx:'DOC', xlsx:'XLS', png:'IMG', txt:'TXT', csv:'CSV' };
+  const cls = ['pdf', 'docx', 'xlsx', 'png', 'txt', 'csv'].find(x => t.includes(x)) || 'txt';
+  const labels = { pdf: 'PDF', docx: 'DOC', xlsx: 'XLS', png: 'IMG', txt: 'TXT', csv: 'CSV' };
   return <div className={`file-icon ${cls}`}>{labels[cls] || 'DOC'}</div>;
 }
 
@@ -57,7 +57,7 @@ export default function Dashboard({ docs, onNavigate, onUploadFile }) {
       {/* Hero banner */}
       <div className="card" style={{
         padding: '28px 32px', marginBottom: 20,
-        background: 'linear-gradient(135deg,#1a1200 0%,#1e1e1e 60%)',
+        background: 'var(--bg-hero)',
         borderColor: 'rgba(255,107,34,0.2)',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         overflow: 'hidden', position: 'relative'
@@ -67,7 +67,7 @@ export default function Dashboard({ docs, onNavigate, onUploadFile }) {
         </div>
         <div>
           <h1 style={{ fontSize: '1.6rem', marginBottom: 6 }}>
-            Welcome, Ashutosh! 👋
+            Welcome, User! 👋
           </h1>
           <p style={{ color: 'var(--text-2)', fontSize: '0.88rem' }}>
             Turn your documents into clear summaries, insights and smart answers.
